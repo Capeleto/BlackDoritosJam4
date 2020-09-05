@@ -3,8 +3,10 @@ import sky from './assets/sky.png';
 import platform from './assets/platform.png';
 import star from './assets/star.png';
 import bomb from './assets/bomb.png';
+import projectile from './assets/bullet.png';
 import Rat from './bosses/rat.js';
 import HealthBar from './health-bar/HealthBar';
+import Bullet from './bullet/Bullet';
 
 let config = {
     type: Phaser.AUTO,
@@ -32,6 +34,18 @@ let cursors;
 let score = 0;
 let gameOver = false;
 let scoreText;
+let direction = {};
+let bullets;
+
+let lastFired = 0;
+let fireRate = 200;
+
+const DIRECTIONS = {
+    Up: 'up',
+    Down: 'Down',
+    Left: 'Left',
+    Right: 'Right',
+};
 
 let game = new Phaser.Game(config);
 const rat = new Rat();
@@ -41,6 +55,7 @@ function preload() {
     this.load.image('ground', platform);
     this.load.image('star', star);
     this.load.image('bomb', bomb);
+    this.load.image('bullet', projectile);
     rat.load(this);
 }
 
@@ -54,7 +69,7 @@ function create() {
 
     //  Here we create the ground.
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
-    platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+    platforms.create(400, 570, 'ground').setScale(2).refreshBody();
 
     //  Now let's create some ledges
     platforms.create(600, 400, 'ground');
@@ -70,6 +85,14 @@ function create() {
 
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
+
+    bullets = this.physics.add.group({
+        classType: Bullet,
+        maxSize: 20,
+        runChildUpdate: true
+    });
+
+    bullets.createMultiple({ quantity: 20, active: false });
 
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     stars = this.physics.add.group({
@@ -95,13 +118,16 @@ function create() {
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(stars, platforms);
     this.physics.add.collider(bombs, platforms);
+    this.physics.add.collider(bullets, platforms);
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     this.physics.add.overlap(player, stars, collectStar, null, this);
 
     this.physics.add.collider(player, bombs, hitBomb, null, this);
+    
+    this.physics.add.collider(bullets, bombs, shootBomb, null, this);
 
-    hp = new HealthBar(this, 50, 150);
+    hp = new HealthBar(this, 15, 555);
 
     var x =
         player.x < 400
@@ -115,7 +141,7 @@ function create() {
     bomb.allowGravity = false;
 }
 
-function update() {
+function update(time) {
     if (gameOver) {
         this.scene.restart();
         this.physics.resume();
@@ -128,17 +154,21 @@ function update() {
     if (cursors.up.isDown) {
         player.setVelocityY(-300);
         player.anims.play('up', true);
+        updateDirection(DIRECTIONS.Up);
     } else if (cursors.down.isDown) {
         player.setVelocityY(300);
         player.anims.play('down', true);
+        updateDirection(DIRECTIONS.Down);
     }
 
     if (cursors.left.isDown) {
         player.setVelocityX(-300);
         player.anims.play('left', true);
+        updateDirection(DIRECTIONS.Left);
     } else if (cursors.right.isDown) {
         player.setVelocityX(300);
         player.anims.play('right', true);
+        updateDirection(DIRECTIONS.Right);
     }
 
     if (checkCursorDown()) {
@@ -146,6 +176,19 @@ function update() {
 
         player.anims.play('turn');
     }
+
+    if (cursors.space.isDown) {
+        if (time > lastFired) {
+            var bullet = bullets.get(player.x, player.y);
+        
+            if (bullet)
+            {
+                bullet.fire(player.x, player.y, direction);
+        
+                lastFired = time + fireRate;
+            }
+        }
+    } 
 }
 
 function checkCursorDown() {
@@ -182,6 +225,42 @@ function hitBomb(player, bomb) {
     
         gameOver = true;
     }
-    
+
     player.setTint(0xffffff);
+}
+
+function shootBomb(bullet, bomb) {
+    bomb.disableBody(true, true);
+ }
+
+function updateDirection(newDirection) {
+    switch (newDirection) {
+        case DIRECTIONS.Up:
+            direction.up = true;
+            direction.down = false;
+            direction.left = false;
+            direction.right = false;
+            break;
+        case DIRECTIONS.Down:
+            direction.up = false;
+            direction.down = true;
+            direction.left = false;
+            direction.right = false;
+            break;
+        case DIRECTIONS.Left:
+            direction.up = false;
+            direction.down = false;
+            direction.left = true;
+            direction.right = false;
+            break;
+        case DIRECTIONS.Right:
+            direction.up = false;
+            direction.down = false;
+            direction.left = false;
+            direction.right = true;
+            break;
+        default:
+            break;
+    }
+
 }
