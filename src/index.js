@@ -4,6 +4,7 @@ import platform from './assets/platform.png';
 import star from './assets/star.png';
 import bomb from './assets/bomb.png';
 import Rat from './bosses/rat.js';
+import HealthBar from './health-bar/HealthBar';
 
 let config = {
     type: Phaser.AUTO,
@@ -23,6 +24,7 @@ let config = {
 };
 
 let player;
+let hp;
 let stars;
 let bombs;
 let platforms;
@@ -84,7 +86,7 @@ function create() {
     bombs = this.physics.add.group();
 
     //  The score
-    scoreText = this.add.text(16, 16, 'score: 0', {
+    scoreText = this.add.text(16, 16, 'Score: 0', {
         fontSize: '32px',
         fill: '#000',
     });
@@ -98,6 +100,8 @@ function create() {
     this.physics.add.overlap(player, stars, collectStar, null, this);
 
     this.physics.add.collider(player, bombs, hitBomb, null, this);
+
+    hp = new HealthBar(this, 50, 150);
 
     var x =
         player.x < 400
@@ -115,6 +119,7 @@ function update() {
     if (gameOver) {
         this.scene.restart();
         this.physics.resume();
+        score = 0;
         gameOver = false;
     }
 
@@ -168,11 +173,15 @@ function collectStar(player, star) {
 }
 
 function hitBomb(player, bomb) {
-    this.physics.pause();
-
     player.setTint(0xff0000);
-
-    player.anims.play('turn');
-
-    gameOver = true;
+    
+    if (hp.decrease(10)) {
+        this.physics.pause();
+        
+        player.anims.play('turn');
+    
+        gameOver = true;
+    }
+    
+    player.setTint(0xffffff);
 }
