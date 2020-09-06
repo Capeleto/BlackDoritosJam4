@@ -14,7 +14,7 @@ export default class Player {
         this.scene = scene;
         this.direction = {};
         this.lastFired = 0;
-        this.fireRate = 200;
+        this.fireRate = 100;
         this.bullets = this.scene.physics.add.group({
             classType: Bullet,
             maxSize: 20,
