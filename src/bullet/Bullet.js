@@ -1,13 +1,9 @@
 import Phaser from 'phaser';
 
 const Bullet = new Phaser.Class({
-
     Extends: Phaser.GameObjects.Image,
 
-    initialize:
-
-    function Bullet (scene)
-    {
+    initialize: function Bullet(scene) {
         Phaser.GameObjects.Image.call(this, scene, 0, 0, 'bullet');
 
         this.incX = 0;
@@ -17,8 +13,7 @@ const Bullet = new Phaser.Class({
         this.speed = Phaser.Math.GetSpeed(600, 1);
     },
 
-    fire: function (x, y, direction)
-    {
+    fire: function (x, y, direction) {
         this.setActive(true);
         this.setVisible(true);
 
@@ -38,15 +33,13 @@ const Bullet = new Phaser.Class({
         this.lifespan = 1000;
     },
 
-    update: function (time, delta)
-    {
+    update: function (time, delta) {
         this.lifespan -= delta;
 
         this.x -= this.incX * (this.speed * delta);
         this.y -= this.incY * (this.speed * delta);
 
-        if (this.lifespan <= 0)
-        {
+        if (this.lifespan <= 0) {
             this.setActive(false);
             this.setVisible(false);
         }
@@ -58,7 +51,7 @@ const Bullet = new Phaser.Class({
         } else if (direction.left) {
             return x + 50;
         }
-    
+
         return x;
     },
 
@@ -68,10 +61,9 @@ const Bullet = new Phaser.Class({
         } else if (direction.down) {
             return y - 50;
         }
-    
-        return y;
-    }
 
+        return y;
+    },
 });
 
 export default Bullet;

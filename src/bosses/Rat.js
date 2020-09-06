@@ -58,4 +58,8 @@ export default class Rat {
     sprite(ref, x, y) {
         return ref.physics.add.sprite(x, y, 'rat');
     }
+
+    getHitted() {
+        this.player.setTint(0xff0000);
+    }
 }

@@ -1,27 +1,32 @@
 {
-  "name": "phaser-project",
-  "version": "0.0.0",
-  "description": "A Phaser 3 Project",
-  "main": "src/index.js",
-  "scripts": {
-    "build": "webpack --config webpack/prod.js ",
-    "start": "webpack-dev-server --config webpack/base.js --open"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.11.6",
-    "@babel/preset-env": "^7.11.5",
-    "babel-loader": "^8.1.0",
-    "clean-webpack-plugin": "^3.0.0",
-    "file-loader": "^4.3.0",
-    "html-webpack-plugin": "^3.2.0",
-    "raw-loader": "^3.1.0",
-    "terser-webpack-plugin": "^2.3.8",
-    "webpack": "^4.44.1",
-    "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^3.11.0",
-    "webpack-merge": "^4.2.2"
-  },
-  "dependencies": {
-    "phaser": "^3.24.1"
-  }
+    "name": "phaser-project",
+    "version": "0.0.0",
+    "description": "A Phaser 3 Project",
+    "main": "src/index.js",
+    "scripts": {
+        "build": "webpack --config webpack/prod.js ",
+        "start": "webpack-dev-server --config webpack/base.js --open"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.11.6",
+        "@babel/preset-env": "^7.11.5",
+        "@babel/plugin-proposal-nullish-coalescing-operator": "^7.10.4",
+        "@babel/plugin-proposal-optional-chaining": "^7.11.0",
+        "@babel/preset-typescript": "^7.10.4",
+        "@babel/plugin-syntax-class-properties": "^7.10.4",
+        "babel-loader": "^8.1.0",
+        "clean-webpack-plugin": "^3.0.0",
+        "core-js": "^3.1.4",
+        "file-loader": "^4.3.0",
+        "html-webpack-plugin": "^3.2.0",
+        "raw-loader": "^3.1.0",
+        "terser-webpack-plugin": "^2.3.8",
+        "webpack": "^4.44.1",
+        "webpack-cli": "^3.3.12",
+        "webpack-dev-server": "^3.11.0",
+        "webpack-merge": "^4.2.2"
+    },
+    "dependencies": {
+        "phaser": "^3.24.1"
+    }
 }
