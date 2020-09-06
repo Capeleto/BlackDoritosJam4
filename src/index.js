@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import PlagueHell from './PlagueHell.js';
+import GameOver from './GameOver';
 
 const config = {
     type: Phaser.AUTO,
@@ -11,7 +12,7 @@ const config = {
             debug: true,
         },
     },
-    scene: PlagueHell,
+    scene: [PlagueHell, GameOver],
 };
 
 new Phaser.Game(config);

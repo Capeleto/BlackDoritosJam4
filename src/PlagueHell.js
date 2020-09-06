@@ -9,7 +9,7 @@ import MovementsController from './control-movements/MovementsController.js';
 
 export default class PlagueHell extends Phaser.Scene {
     constructor() {
-        super();
+        super('PlagueHell');
 
         this.cursors = {};
         this.gameOver = false;
@@ -32,7 +32,6 @@ export default class PlagueHell extends Phaser.Scene {
 
     create() {
         // Groups
-        this.bombs = this.physics.add.group();
         this.rats = this.physics.add.group();
 
         // this.playerGroup = this.physics.add.group();
@@ -48,14 +47,11 @@ export default class PlagueHell extends Phaser.Scene {
         this.player.create();
         Rat.create(this);
 
-        // Colisions
-        this.physics.add.collider(
-            this.player.sprite,
-            this.bombs,
-            this.hitPlayer,
-            null,
-            this
-        );
+        this.scoreText = this.add.text(16, 16, 'Score: 0', {
+            fontSize: '32px',
+            fill: '#000',
+        });
+
         this.physics.add.collider(
             this.player.sprite,
             this.rats,
@@ -66,7 +62,7 @@ export default class PlagueHell extends Phaser.Scene {
         this.physics.add.collider(
             this.player.bullets,
             this.rats,
-            this.shootBomb,
+            this.shootRat,
             null,
             this
         );
@@ -95,18 +91,10 @@ export default class PlagueHell extends Phaser.Scene {
         //     this.player.x < 400
         //         ? Phaser.Math.Between(400, 800)
         //         : Phaser.Math.Between(0, 400);
-
-        // this.createBombsTimer(this);
         this.createRatSpawn(this);
     }
 
     update(time) {
-        if (this.gameOver) {
-            this.scene.restart();
-            this.physics.resume();
-            this.gameOver = false;
-        }
-
         this.player.actions(time);
 
         this.background.update();
@@ -123,44 +111,35 @@ export default class PlagueHell extends Phaser.Scene {
         element.destroy();
         this.sound.add('hitPlayer').play();
 
-        if (this.hp.decrease(10)) {
+        if (this.hp.decrease(20)) {
             this.physics.pause();
 
             this.player.sprite.anims.play('turn');
+            
+            const score = this.score;
+            this.score = 0;
 
-            this.gameOver = true;
+            this.scene.start('GameOver', { score });
+
         }
 
         setTimeout(() => this.player.sprite.setTint(0xffffff), 200);
     }
 
-    shootBomb(bullet, bomb) {
-        bomb.destroy();
+    shootRat(bullet, rat) {
+        this.score += 10;
+        this.scoreText.setText('Score: ' + this.score);
+        rat.destroy();
     }
 
     createRatSpawn(scene) {
         scene.time.addEvent({
-            delay: 3000,
+            delay: 1000,
             callback: function () {
-                // if (this.rats.getChildren().length < 2) {
                 this.createRat(
                     Phaser.Math.Between(0, 640),
                     Phaser.Math.Between(0, 480)
                 );
-                // }
-            },
-            repeat: -1,
-            callbackScope: this,
-        });
-    }
-
-    createBombsTimer(scene) {
-        scene.time.addEvent({
-            delay: 5000,
-            callback: function () {
-                if (this.bombs.getChildren().length < 5) {
-                    this.createBomb();
-                }
             },
             repeat: -1,
             callbackScope: this,
@@ -183,13 +162,5 @@ export default class PlagueHell extends Phaser.Scene {
         rat.setCollideWorldBounds(true);
         rat.setVelocity(Phaser.Math.Between(-200, 200), 20);
         rat.allowGravity = false;
-    }
-
-    createBomb(x, y) {
-        var bomb = this.bombs.create(x, y, 'bomb');
-        bomb.setBounce(1);
-        bomb.setCollideWorldBounds(true);
-        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-        bomb.allowGravity = false;
     }
 }
