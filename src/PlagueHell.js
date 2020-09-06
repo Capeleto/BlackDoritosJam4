@@ -129,6 +129,7 @@ export default class PlagueHell extends Phaser.Scene {
     shootRat(bullet, rat) {
         this.score += 10;
         this.scoreText.setText('Score: ' + this.score);
+        bullet.destroy();
         rat.destroy();
     }
 
