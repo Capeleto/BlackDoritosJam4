@@ -108,23 +108,19 @@ export default class Player {
         if (cursors.up.isDown) {
             sprite.setVelocityY(-200);
             sprite.anims.play('up', true);
-            this.updateDirection(DIRECTIONS.UP);
         }
         if (cursors.down.isDown) {
             sprite.setVelocityY(200);
             sprite.anims.play('down', true);
-            this.updateDirection(DIRECTIONS.DOWN);
         }
 
         if (cursors.left.isDown) {
             sprite.setVelocityX(-200);
             sprite.anims.play('left', true);
-            this.updateDirection(DIRECTIONS.LEFT);
         }
         if (cursors.right.isDown) {
             sprite.setVelocityX(200);
             sprite.anims.play('right', true);
-            this.updateDirection(DIRECTIONS.RIGHT);
         }
 
         if (this.checkCursorDown(cursors)) {
@@ -161,36 +157,5 @@ export default class Player {
             !cursors.left.isDown &&
             !cursors.down.isDown
         );
-    }
-
-    updateDirection(newDirection) {
-        switch (newDirection) {
-            case DIRECTIONS.UP:
-                this.direction.up = true;
-                this.direction.down = false;
-                this.direction.left = false;
-                this.direction.right = false;
-                break;
-            case DIRECTIONS.DOWN:
-                this.direction.up = false;
-                this.direction.down = true;
-                this.direction.left = false;
-                this.direction.right = false;
-                break;
-            case DIRECTIONS.LEFT:
-                this.direction.up = false;
-                this.direction.down = false;
-                this.direction.left = true;
-                this.direction.right = false;
-                break;
-            case DIRECTIONS.RIGHT:
-                this.direction.up = false;
-                this.direction.down = false;
-                this.direction.left = false;
-                this.direction.right = true;
-                break;
-            default:
-                break;
-        }
     }
 }

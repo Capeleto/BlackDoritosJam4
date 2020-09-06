@@ -3,7 +3,7 @@ import Background from './background/Background.js';
 import Player from './player/Player.js';
 import HealthBar from './health-bar/HealthBar.js';
 import Bomb from './assets/bomb.png';
-import Projectile from './assets/projectile.png';
+import Projectile from './assets/bullet.png';
 
 export default class PlagueHell extends Phaser.Scene {
     constructor() {
@@ -14,7 +14,6 @@ export default class PlagueHell extends Phaser.Scene {
         this.hp;
         this.player;
         this.playerCam;
-        this.bombs;
         this.score = 0;
         this.gameOver = false;
         this.scoreText;
@@ -44,7 +43,7 @@ export default class PlagueHell extends Phaser.Scene {
 
         // Colisions
         this.physics.add.collider(
-            this.player,
+            this.player.sprite,
             this.bombs,
             this.hitPlayer,
             null,
@@ -83,11 +82,8 @@ export default class PlagueHell extends Phaser.Scene {
                 ? Phaser.Math.Between(400, 800)
                 : Phaser.Math.Between(0, 400);
 
-        this.bomb = this.bombs.create(x, 16, 'bomb');
-        this.bomb.setBounce(1);
-        this.bomb.setCollideWorldBounds(true);
-        this.bomb.setVelocity(Phaser.Math.Between(-300, 300), 20);
-        this.bomb.allowGravity = false;
+        
+        this.createBombsTimer(this);
     }
 
     update(time) {
@@ -103,7 +99,7 @@ export default class PlagueHell extends Phaser.Scene {
     }
 
     hitPlayer(player, bomb) {
-        this.player.setTint(0xff0000);
+        this.player.sprite.setTint(0xff0000);
         this.sound.add('hitPlayer').play();
 
         if (this.hp.decrease(10)) {
@@ -114,10 +110,31 @@ export default class PlagueHell extends Phaser.Scene {
             this.gameOver = true;
         }
 
-        setTimeout(() => this.player.setTint(0xffffff), 200);
+        setTimeout(() => this.player.sprite.setTint(0xffffff), 200);
     }
 
     shootBomb(bullet, bomb) {
         bomb.disableBody(true, true);
+    }
+
+    createBombsTimer(scene) {
+        scene.time.addEvent({
+            delay: 5000,
+            callback: function () {
+                if (this.bombs.getChildren().length < 5) {
+                    this.createBomb(Phaser.Math.Between(0, 640), Phaser.Math.Between(0, 480));
+                }
+            },
+            repeat: -1,
+            callbackScope: this
+        });
+    }
+
+    createBomb(x, y) {
+        var bomb = this.bombs.create(x, y, 'bomb');
+        bomb.setBounce(1);
+        bomb.setCollideWorldBounds(true);
+        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        bomb.allowGravity = false;
     }
 }
