@@ -28,8 +28,11 @@ export default class Background {
 
     static load(ref) {
         ref.load.image('background', Bg);
-        ref.load.image('star', smallBgEffect);
+        // ref.load.image('star', smallBgEffect);
     }
 
-    update(player) {}
+    update(ref) {
+        // scroll the texture of the tilesprites proportionally to the camera scroll
+        ref.background.tilePositionY = ref.playerCam.scrollY * 0.3;
+    }
 }
