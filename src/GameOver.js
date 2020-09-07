@@ -22,19 +22,29 @@ export default class GameOver extends Phaser.Scene {
             fill: '#000',
         });
 
-        this.scoreText = this.add.text(320, 190, `Score: ${this.score}`, {
-            fontSize: '32px',
-            fill: '#000',
-        });
-        
-        this.tryAgainText = this.add.text(160, 450, 'Press space to try again...', {
-            fontSize: '32px',
-            fill: '#000',
-        });
+        this.scoreText = this.add.text(
+            320,
+            190,
+            `Score: ${Math.round(this.score * 100) / 100}`,
+            {
+                fontSize: '32px',
+                fill: '#000',
+            }
+        );
+
+        this.tryAgainText = this.add.text(
+            160,
+            450,
+            'Press space to try again...',
+            {
+                fontSize: '32px',
+                fill: '#000',
+            }
+        );
 
         this.restartButton = this.input.keyboard.addKey('SPACE');
         this.restartButton.on('down', () => {
             this.scene.start('PlagueHell');
-        })
+        });
     }
 }
