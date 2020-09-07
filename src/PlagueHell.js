@@ -182,16 +182,15 @@ export default class PlagueHell extends Phaser.Scene {
     killFlea(bullet, rat) {
         rat.destroy();
         bullet.destroy();
-        this.playerCam.flash();
     }
 
     killRat(bullet, rat) {
         rat.destroy();
-        this.score += Number.parseInt(Math.random() * 10) * rat.scale;
+        this.score += Number.parseInt(Math.random() * 10) * (rat.scale * 10);
         this.scoreText.setText('Score: ' + this.score);
         bullet.destroy();
 
-        let num = rat.scaleX * 10 * 4;
+        let num = rat.scaleX * 10 * rat.scale;
         for (let i = 0; i < num; i++) {
             this.createFlea(rat.x, rat.y, rat.scale);
         }
@@ -238,26 +237,12 @@ export default class PlagueHell extends Phaser.Scene {
 
         rat.setBounce(1);
         rat.setCollideWorldBounds(true);
-        rat.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        rat.setVelocity(
+            Phaser.Math.Between(-75, 100),
+            Phaser.Math.Between(-75, 100)
+        );
         rat.allowGravity = false;
         rat.setScale(scale);
-
-        // var callback = function (
-        //     body,
-        //     blockedUp,
-        //     blockedDown,
-        //     blockedLeft,
-        //     blockedRight
-        // ) {
-        //     console.log(
-        //         body,
-        //         blockedUp,
-        //         blockedDown,
-        //         blockedLeft,
-        //         blockedRight
-        //     );
-        // };
-        // rat.on('worldbounds', callback);
     }
 
     createFlea(x, y, ratScale) {
@@ -275,7 +260,10 @@ export default class PlagueHell extends Phaser.Scene {
 
         flea.setBounce(1);
         flea.setCollideWorldBounds(true);
-        flea.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        flea.setVelocity(
+            Phaser.Math.Between(-125, 75),
+            Phaser.Math.Between(-125, 75)
+        );
         flea.allowGravity = false;
         flea.setScale(scale);
     }

@@ -3,18 +3,10 @@ import Phaser from 'phaser';
 export default class MovementsController {
     move(ref, target, scene, name, animate) {
         ref.children.entries.forEach(function (child) {
-            // child.setAcceleration(
-            //     Math.cos(target.rotation) * 600,
-            //     Math.sin(target.rotation) * 600
-            // );
-
-            // scene.physics.moveToObject(child, target, 100);
-            // scene.physics.moveTo(
-            //     child,
-            //     target.x,
-            //     target.y,
-            //     Phaser.Math.Between(100, 200)
-            // );
+            child.setAcceleration(
+                Math.cos(target.rotation) * child.scale,
+                Math.sin(target.rotation) * child.scale
+            );
 
             if (animate) {
                 if (child.body.velocity.x > 0) {
