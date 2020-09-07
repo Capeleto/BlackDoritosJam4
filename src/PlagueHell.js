@@ -181,13 +181,19 @@ export default class PlagueHell extends Phaser.Scene {
 
     killFlea(bullet, rat) {
         rat.destroy();
+        this.score +=
+            Number.parseInt(Math.random() * 10) *
+            (Math.round(rat.scale * 100) / 100);
+        this.scoreText.setText('Score: ' + Math.round(this.score * 100) / 100);
         bullet.destroy();
     }
 
     killRat(bullet, rat) {
         rat.destroy();
-        this.score += Number.parseInt(Math.random() * 10) * (rat.scale * 10);
-        this.scoreText.setText('Score: ' + this.score);
+        this.score +=
+            Number.parseInt(Math.random() * 10) *
+            (Math.round(rat.scale * 100) / 100);
+        this.scoreText.setText('Score: ' + Math.round(this.score * 100) / 100);
         bullet.destroy();
 
         let num = rat.scaleX * 10 * rat.scale;
@@ -249,8 +255,12 @@ export default class PlagueHell extends Phaser.Scene {
         let flea = this.fleas.getFirstDead();
         let scale = (Math.round(Math.random() * 100) / 100) * (ratScale / 2);
 
-        if (scale < 0.5) {
-            scale += 0.5;
+        if (scale < 0.3) {
+            scale += 0.7;
+        }
+
+        if (scale < 0.6) {
+            scale += 0.4;
         }
 
         if (flea == null) {

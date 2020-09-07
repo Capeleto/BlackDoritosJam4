@@ -63,8 +63,4 @@ export default class Rat {
             frameRate: 10,
         });
     }
-
-    getHitted() {
-        this.player.setTint(0xff0000);
-    }
 }

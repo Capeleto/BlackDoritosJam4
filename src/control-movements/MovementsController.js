@@ -1,5 +1,3 @@
-import Phaser from 'phaser';
-
 export default class MovementsController {
     move(ref, target, scene, name, animate) {
         ref.children.entries.forEach(function (child) {
